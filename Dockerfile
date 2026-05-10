@@ -24,21 +24,20 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     ca-certificates \
   && rm -rf /var/lib/apt/lists/*
 
-# alass binary (Phase 6 audio sync — Desktop only)
-RUN ALASS_VER=0.6.1 && \
-    wget -qO /app/bin/alass-linux-x86_64 \
-    "https://github.com/kaegi/alass/releases/download/v${ALASS_VER}/alass-linux-x86_64" && \
-    chmod +x /app/bin/alass-linux-x86_64 && \
-    echo "alass installed"
-
 COPY --from=builder /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY package.json ./
 
-RUN mkdir -p bin
+# alass binary (Phase 6 audio sync — Desktop only; non-fatal if download fails)
+RUN mkdir -p bin && \
+    ALASS_VER=0.6.1 && \
+    wget -qO bin/alass-linux-x86_64 \
+    "https://github.com/kaegi/alass/releases/download/v${ALASS_VER}/alass-linux-x86_64" \
+    && chmod +x bin/alass-linux-x86_64 \
+    || echo "alass download skipped"
 
 ENV NODE_ENV=production
-ENV PORT=7777
-EXPOSE 7777
+ENV PORT=10000
+EXPOSE 10000
 
 CMD ["node", "dist/index.js"]

@@ -1,0 +1,23 @@
+services:
+  - type: web
+    name: stremio-autosub
+    runtime: docker
+    plan: free
+    healthCheckPath: /health
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: "10000"
+      - key: SUB_LANGS
+        value: ara,eng
+      - key: PUBLIC_URL
+        sync: false
+      - key: SUBDL_API_KEY
+        sync: false
+      - key: OPENSUBTITLES_API_KEY
+        sync: false
+      - key: OPENSUBTITLES_USERNAME
+        sync: false
+      - key: OPENSUBTITLES_PASSWORD
+        sync: false
